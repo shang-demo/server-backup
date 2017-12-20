@@ -14,6 +14,7 @@ MONGO_BACKUP_DAYS=1
 FILE_BACKUP_DAYS=1
 
 # git 备份设置
+OPENSSL_PATH=/usr/local/bin/openssl
 GIT_BACKUP=true
 GIT_WAREHOUSE_DIR=/data/git_backup
 ENCRYPT_PASS="git提交前压缩加密密码"

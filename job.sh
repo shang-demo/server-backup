@@ -107,9 +107,13 @@ function deleteFewDaysAgoFile() {
 }
 
 function GIT_BACKUP() {
+  echo $( ${OPENSSL_PATH} version )
+
   mkdir -p ${GIT_WAREHOUSE_DIR}
   cd ${GIT_WAREHOUSE_DIR}
-  tar -zcvf - "${BACKUP_DIR}" |openssl des3 -salt -k ${ENCRYPT_PASS} | dd of="${GIT_WAREHOUSE_DIR}/${BACKUP_TIME}.des3"
+
+  tar -zcvf - "${BACKUP_DIR}" | ${OPENSSL_PATH} aes-128-cbc -salt -k ${ENCRYPT_PASS} | dd of="${GIT_WAREHOUSE_DIR}/${BACKUP_TIME}.tar.aes"
+
   git add -A
   git commit -m "${BACKUP_TIME}"
   git push origin master
@@ -117,9 +121,9 @@ function GIT_BACKUP() {
 
 if [ true == "${MONGO_BACKUP}" ]
 then
-  echo "start file backup"
+  echo "start mongodb backup"
   MONGO_BACKUP_JOB
-  echo "start old file remove"
+  echo "start old mongodb remove"
   deleteFewDaysAgoFile ${MONGO_BACKUP_DAYS} ${MONGO_DUMP_DIR}
 fi
 
@@ -135,16 +139,16 @@ fi
 
 if [ true == "${MYSQL_BACKUP}" ]
 then
-  echo "start file backup"
+  echo "start mysql backup"
   MYSQL_BACKUP_JOB
-  echo "start old file remove"
+  echo "start old mysql remove"
   deleteFewDaysAgoFile ${MYSQL_BACKUP_DAYS} ${MYSQL_DUMP_DIR}
 fi
 
 
 if [ true == "${GIT_BACKUP}" ]
 then
-  rm -rf ${GIT_WAREHOUSE_DIR}/*.des3
+  rm -rf ${GIT_WAREHOUSE_DIR}/*.aes
   GIT_BACKUP
 fi
 
