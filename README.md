@@ -25,3 +25,8 @@ openssl aes-128-cbc -salt -in backup.tar -out backup.tar.aes -k yourpassword
 ```bash
 openssl aes-128-cbc -d -salt -in backup.tar.aes -out backup.restored.tar
 ```
+
+## git with password
+```plain
+https://${username}:${password}@gitee.com/${organization_name}/${project_name}.git
+```
